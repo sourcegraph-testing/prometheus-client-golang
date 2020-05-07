@@ -854,7 +854,7 @@ func TestAPIs(t *testing.T) {
 	tests = append(tests, queryTests...)
 
 	for i, test := range tests {
-		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+		t.Run(strconv.Itoa(i), func(t *testing.T) {
 			client.curTest = test
 
 			res, warnings, err := test.do()
@@ -1068,7 +1068,7 @@ func TestAPIClientDo(t *testing.T) {
 	client := &apiClient{tc}
 
 	for i, test := range tests {
-		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+		t.Run(strconv.Itoa(i), func(t *testing.T) {
 
 			tc.ch <- test
 
