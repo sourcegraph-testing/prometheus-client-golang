@@ -22,7 +22,6 @@ package prometheus_test
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"net/http/httptest"
@@ -1064,7 +1063,7 @@ test_summary_count{name="foo"} 2
 	gauge.With(prometheus.Labels{"name": "baz"}).Set(1.1)
 	counter.With(prometheus.Labels{"name": "qux"}).Inc()
 
-	tmpfile, err := ioutil.TempFile("", "prom_registry_test")
+	tmpfile, err := os.CreateTemp("", "prom_registry_test")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1074,7 +1073,7 @@ test_summary_count{name="foo"} 2
 		t.Fatal(err)
 	}
 
-	fileBytes, err := ioutil.ReadFile(tmpfile.Name())
+	fileBytes, err := os.ReadFile(tmpfile.Name())
 	if err != nil {
 		t.Fatal(err)
 	}

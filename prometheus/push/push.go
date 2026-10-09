@@ -15,17 +15,17 @@
 // builder approach. Create a Pusher with New and then add the various options
 // by using its methods, finally calling Add or Push, like this:
 //
-//    // Easy case:
-//    push.New("http://example.org/metrics", "my_job").Gatherer(myRegistry).Push()
+//	// Easy case:
+//	push.New("http://example.org/metrics", "my_job").Gatherer(myRegistry).Push()
 //
-//    // Complex case:
-//    push.New("http://example.org/metrics", "my_job").
-//        Collector(myCollector1).
-//        Collector(myCollector2).
-//        Grouping("zone", "xy").
-//        Client(&myHTTPClient).
-//        BasicAuth("top", "secret").
-//        Add()
+//	// Complex case:
+//	push.New("http://example.org/metrics", "my_job").
+//	    Collector(myCollector1).
+//	    Collector(myCollector2).
+//	    Grouping("zone", "xy").
+//	    Client(&myHTTPClient).
+//	    BasicAuth("top", "secret").
+//	    Add()
 //
 // See the examples section for more detailed examples.
 //
@@ -38,7 +38,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -221,7 +221,7 @@ func (p *Pusher) Delete() error {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusAccepted {
-		body, _ := ioutil.ReadAll(resp.Body) // Ignore any further error as this is for an error message only.
+		body, _ := io.ReadAll(resp.Body) // Ignore any further error as this is for an error message only.
 		return fmt.Errorf("unexpected status code %d while deleting %s: %s", resp.StatusCode, p.fullURL(), body)
 	}
 	return nil
@@ -269,7 +269,7 @@ func (p *Pusher) push(method string) error {
 	defer resp.Body.Close()
 	// Pushgateway 0.10+ responds with StatusOK, earlier versions with StatusAccepted.
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusAccepted {
-		body, _ := ioutil.ReadAll(resp.Body) // Ignore any further error as this is for an error message only.
+		body, _ := io.ReadAll(resp.Body) // Ignore any further error as this is for an error message only.
 		return fmt.Errorf("unexpected status code %d while pushing to %s: %s", resp.StatusCode, p.fullURL(), body)
 	}
 	return nil
